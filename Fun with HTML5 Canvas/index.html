@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML5 Canvas</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script>
+      // set up the canvas
+      const canvas = document.querySelector("#draw");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx.strokeStyle = "#BADA55";
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.lineWidth = 100;
+
+      let isDrawing = false; //drawing flag
+      let lastX = 0; // x cords
+      let lastY = 0; // y cords
+      let hue = 0; // hue to 0, used to change color
+      let direction = true; //direction, used to change line width
+
+      function draw(e) {
+        // stops fn from running when they are not moused down
+        if (!isDrawing) return;
+
+        //change the color based on the hue variable
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+        ctx.beginPath();
+        // start from
+        ctx.moveTo(lastX, lastY);
+        // go to
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        //set the x\y cords
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+
+        //increment hue
+        //when hue is greater than 360, reset hue to 0
+        hue++;
+        if (hue >= 360) {
+          hue = 0;
+        }
+
+        // use the direction varaible to increase and decrease lineWidth
+        if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+          direction = !direction;
+        }
+        if (direction) {
+          ctx.lineWidth++;
+        } else {
+          ctx.lineWidth--;
+        }
+      }
+
+      // add event addEventListeners
+      // mousedown sets a drawing flag to true
+      // sets the x and y coords to the x,y cords of where the mouse was clicked
+      canvas.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      });
+
+      // mousemove calls the draw fn
+      canvas.addEventListener("mousemove", draw);
+      // mouseup and mouseout sets the drawing flag to false
+      canvas.addEventListener("mouseup", () => (isDrawing = false));
+      canvas.addEventListener("mouseout", () => (isDrawing = false));
+    </script>
+  </body>
+</html>
