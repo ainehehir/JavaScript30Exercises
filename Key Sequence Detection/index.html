@@ -1,0 +1,40 @@
+<!-- javascript 30 -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Key Detection</title>
+    <script
+      type="text/javascript"
+      src="https://www.cornify.com/js/cornify.js"
+    ></script>
+  </head>
+  <body>
+    <script>
+      //declare var
+      const pressed = [];
+      const secretCode = "unicorn";
+
+      window.addEventListener("keyup", (e) => {
+        console.log(e.key);
+
+        //add the user pressed key to the pressed array
+        pressed.push(e.key);
+        console.log(pressed);
+        //remove part of the pressed array
+        // starting at the end(-);
+        pressed.splice(
+          -secretCode.length - 1,
+          pressed.length - secretCode.length
+        );
+
+        // check the array to see if it has the secretcode
+        if (pressed.join("").includes(secretCode)) {
+          console.log("I see unicorns");
+          cornify_add();
+        }
+      });
+    </script>
+  </body>
+</html>
