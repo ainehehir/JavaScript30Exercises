@@ -1,0 +1,58 @@
+<!-- javaScript30 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
+    <div class="speed">
+      <div class="speed-bar">1×</div>
+    </div>
+  </div>
+
+<script>
+
+  const video = document.querySelector('.flex');
+  const speed = document.querySelector('.speed');
+  const speedBar = speed.querySelector('.speed-bar');
+
+  function hanldeMove(e){
+
+    //height of speed bar
+    const y = e.pageY - this.offsetTop;
+    console.log(y);
+    //make the height a percentage
+    const percent = y/this.offsetHeight;
+    console.log(percent);
+
+    // min and max values
+    const min = 0.4;
+    const max = 4;
+
+    //calucate height for the speedBar
+    const height = Math.round(percent * 100) + '%';
+
+    // caluclate the playBack speed
+    const playbackRate = percent * (max - min) + min;
+
+// apply height and text to the speedBar
+    speedBar.style.height = height;
+    speedBar.textContent = playbackRate.toFixed(2) + 'x';
+    //apply playBack to the video
+    video.playbackRate = playbackRate;
+
+
+
+  }
+
+
+  speed.addEventListener('mousemove', hanldeMove);
+</script>
+</body>
+</html>
