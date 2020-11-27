@@ -1,0 +1,123 @@
+<!-- javaScript30 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Whack A Mole!</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Whack-a-mole! <span class="score">0</span></h1>
+
+  <!-- call fn  -->
+  <div class="startGame">
+  <button onClick="startGame()">Start Game</button>
+  </div>
+
+  <div class="game">
+    <div class="hole hole1">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole2">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole3">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole4">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole5">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole6">
+      <div class="mole"></div>
+    </div>
+  </div>
+
+<script>
+  //declare variables
+  const holes = document.querySelectorAll('.hole');
+  const scoreBoard = document.querySelector('.score');
+  const moles = document.querySelectorAll('.mole');
+  let lastHole;
+  let timeUp = false;
+  let score = 0;
+
+//fn to generate a random time
+  function randomTime(min, max){
+    return Math.round(Math.random() * (max - min) + min);
+  }
+
+//fn to generate a hole from the holes nodeList
+  function randomHole(holes){
+    //create a random index based to the holes length
+    const index = Math.floor(Math.random() * holes.length);
+    //get the hole with that index
+    const hole = holes[index];
+    //if the hole is the same as the last hole call the fn again
+    if (hole === lastHole){
+      console.log('Thats the same one bud');
+      return randomHole(holes);
+    }
+    lastHole = hole;
+    return hole;
+  }
+
+// fn to let mole come up
+  function peep(){
+    //call the randomTime fn
+    const time = randomTime(200, 1000);
+    //call the randomHole fn
+    const hole = randomHole(holes);
+
+    //apply the up class to the hole
+    hole.classList.add('up');
+
+    //after the the random time remove the up class
+    //if the time isn't up call this fn again
+    setTimeout(() => {
+      hole.classList.remove('up');
+      if(!timeUp) peep();
+    }, time);
+  }
+
+// fn to start game
+  function startGame(){
+    //scoreBoard to be updated
+    scoreBoard.textContent = 0;
+    //set timeUp flag to false
+    timeUp = false;
+    //set score to 0
+    score = 0;
+    // call peep fn
+    peep();
+    //after 10 seconds set timeUp to true
+    setTimeout(() => timeUp = true,
+    10000)
+  }
+
+
+// fn the user hit a hole
+  function bonk(e){
+    //stop cheaters
+    if(!e.isTrusted) return;
+    //update the score
+    score++;
+    //remove the up class
+    this.parentNode.classList.remove('up');
+    //update the scoreBoard
+    scoreBoard.textContent = score;
+  }
+
+//add eventListeners to the moles and call the bonk fn
+  moles.forEach(mole => mole.addEventListener('click', bonk));
+
+
+
+
+</script>
+</body>
+</html>
